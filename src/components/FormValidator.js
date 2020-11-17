@@ -5,16 +5,13 @@ export default class FormValidator {
         this._inactiveButtonClass = settings.inactiveButtonClass
         this._inputErrorClass = settings.inputErrorClass
         this._errorClass = settings.errorClass
-        this._formSelector = formSelector
+        this._formSelector = formSelector        
     }
 
     //перебор инпутов
     _setEventListeners() {
-        const inputs = Array.from(this._formElement.querySelectorAll(this._inputSelector))
-        this._inputs = inputs
-
-        const buttonElement = this._formElement.querySelector(this._submitButtonSelector)
-        this._buttonElement= buttonElement
+        this._inputs = Array.from(this._formElement.querySelectorAll(this._inputSelector))
+        this._buttonElement = this._formElement.querySelector(this._submitButtonSelector)
         this._toggleButtonState()
         this._inputs.forEach((inputElement) => {
             inputElement.addEventListener('input', () => {
@@ -23,7 +20,7 @@ export default class FormValidator {
             })
         })
     }
-    
+
     // отображение активности кнопки Сохранить
     _toggleButtonState() {
         if (this._hasValidInput()) {
@@ -44,12 +41,20 @@ export default class FormValidator {
         }
     }
 
+    _buttonOff = () => {
+        if (!(this._buttonNewPlace.id == 'popupProfileEdit')) {
+            this._buttonNewPlace.classList.add('popup__save_disabled')
+            this._buttonNewPlace.disabled = true
+        }
+    }
+    
+
     // добавление визуализации о неправильности ввода поля
     _showInputError(inputElement) {
         this._errorElement = this._formElement.querySelector(`#${inputElement.id}-error`)
         inputElement.classList.add(this._inputErrorClass)
         this._errorElement.classList.add(this._errorClass)
-        this._errorElement.style.display='block'
+        this._errorElement.style.display = 'block'
         this._errorElement.textContent = inputElement.validationMessage
     }
 
@@ -58,7 +63,7 @@ export default class FormValidator {
         this._errorElement = this._formElement.querySelector(`#${inputElement.id}-error`)
         inputElement.classList.remove(this._inputErrorClass)
         this._errorElement.classList.remove(this._errorClass)
-        this._errorElement.style.display='none'
+        this._errorElement.style.display = 'none'
     }
 
     _hasValidInput() {
@@ -70,8 +75,10 @@ export default class FormValidator {
     // отправка формы
     enableValidation() {
         this._formElement = document.querySelector(this._formSelector);
+        this._buttonNewPlace = this._formElement.querySelector('.popup__save-buttonOff')
         this._formElement.addEventListener('submit', (evt) => {
             evt.preventDefault()
+            this._buttonOff()
         })
         this._setEventListeners()
     }
